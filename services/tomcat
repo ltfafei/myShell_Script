@@ -1,0 +1,36 @@
+# !/bin/bash
+# Write by afei
+# tomcat startup script for Tomcat Server
+
+#chkconfig:345 80 20
+#description:start the tomcat deamon
+
+#Source function library
+JAVA_HOME=/root/jdk1.8.0_191
+export JAVA_HOME
+CATALANA_HOME=/root/tomcat
+export CATALANA_HOME
+
+case "$1" in
+
+start)
+        echo "Starting Tomcat..."
+        $CATALANA_HOME/bin/startup.sh
+        ;;
+stop)
+        echo "Stopping Tomcat..."
+        $CATALANA_HOME/bin/shutdown.sh
+        ;;
+restart)
+        echo "Stopping Tomcat..."
+        $CATALANA_HOME/bin/shutdown.sh
+        sleep 2
+        echo
+        echo "Starting Tomcat..."
+        $CATALANA_HOME/bin/startup.sh
+        ;;
+*)
+        echo "Usage:$prog {start|stop|restart}"
+        ;;
+esac
+exit 0

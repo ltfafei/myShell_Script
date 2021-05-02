@@ -1,0 +1,61 @@
+#-------------------------------
+# alertmanager for wechat alert
+#-------------------------------
+global:
+  resolve_timeout: 3m
+
+templates:
+- '/usr/local/alertmanager-0.21.0-rc.0.linux-amd64/template/*.tmpl'
+
+route:
+  group_by: ['wechat_alert']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 10m
+  receiver: 'wechat'
+
+# wechat option configuration
+receivers:
+- name: 'wechat'
+  wechat_configs:
+  - send_resolved: true
+    corp_id: '企业id，在企业的配置页面可以看到'
+    to_user: '@all'                     #指定接收消息成员，"@all"表示向该部门所有成员发送
+    to_party: 'PartyID1|PartyID2'       #多个可用|分隔开
+    message: '{{ template "wechat.default.message" . }}'
+    agent_id: '第三方应用的AgentId，在应用的配置页面查看'
+    api_secret: '第三方应用的secret，在应用的配置页面查看'
+
+# optional
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['wechat_alert', 'dev', 'instance']
+
+
+#---------------------------------
+# alertmanager for dingtalk alert
+#---------------------------------
+global:
+  resolve_timeout: 5m
+
+route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+  receiver: 'web.hook'
+receivers:
+- name: 'web.hook'
+  webhook_configs:
+  - url: 'http://localhost:8060/dingtalk/webhook/send'
+    send_resolved: true    #告警恢复通知
+    
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'dev', 'instance']

@@ -1,0 +1,17 @@
+# Write by afei
+
+[Unit]
+Description=node_exporter
+Documentation=https://prometheus.io/download/#node_exporter
+After=network.target
+
+[Service]
+#设置为simple时，ExecStart=进程 就是该服务的主进程
+Type=simple  
+User=root
+ExecStart=/usr/local/node_exporter-1.0.0.linux-amd64/node_exporter
+Restart=on-failure
+ExecStop=/bin/kill -WINCH ${MAINPID}
+
+[Install]
+WantedBy=multi-user.target

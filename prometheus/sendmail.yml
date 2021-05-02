@@ -1,0 +1,11 @@
+groups:
+- name: sendmail.rules
+  rules:
+  - alert: Nodes_monitor_Down
+    expr: up==0
+    for: 3m
+    lables:
+      severity: error
+    annotations:
+      summary: "Instance {{ $labels.instance }} 已停止工作！"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} 注意：已经停止工作超过3分钟."

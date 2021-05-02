@@ -1,0 +1,16 @@
+# Write by afei
+
+[Unit]
+Description=redis-server
+Documentation=https://redis.io/documentation
+After=network.target
+
+[Service]
+Type=simple  
+User=root
+ExecStart=/usr/local/redis/bin/redis-server
+Restart=on-failure
+ExecStop=/bin/kill -WINCH ${MAINPID}
+
+[Install]
+WantedBy=multi-user.target

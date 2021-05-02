@@ -1,0 +1,16 @@
+# Write by afei
+
+[Unit]
+Description=fprc.service
+Documentation=https://github.com/fatedier/frp/releases
+After=network.target
+
+[Service]
+Type=simple  
+User=root
+ExecStart=/usr/local/frp_0.33.0_linux_amd64/frpc -c /usr/local/frp_0.33.0_linux_amd64/frpc.ini
+Restart=on-failure
+ExecStop=/bin/kill -WINCH ${MAINPID}
+
+[Install]
+WantedBy=multi-user.target

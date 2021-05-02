@@ -1,0 +1,23 @@
+---
+ - hosts: nodes
+   gather_facts: False
+   tasks:
+     - name: Install epel-repo
+       yum: name=epel-release state=installed
+     - name: Install ohpc-repo
+       yum: name=http://build.openhpc.community/OpenHPC:/1.3/CentOS_7/x86_64/ohpc-release-1.3-1.el7.x86_64.rpm state=installed
+     
+     - name: Install ohpc software
+       yum: name=ohpc-base-compute state=installed
+     - name: Install ohpc-slurm-client
+       yum: name=ohpc-slurm-client state=installed
+    
+     - name: Copy slurm config file
+       copy: src=/etc/slurm/slurm.conf dest=/etc/slurm/
+     - name: Copy munge config file
+       copy: src=/etc/munge/munge.key dest=/etc/munge/
+
+     - name: Start slurmd
+       service: name=slurmd enabled=yes state=started
+     - name: Start munge
+       service: name=munge enabled=yes state=started

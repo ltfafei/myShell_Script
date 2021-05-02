@@ -1,0 +1,17 @@
+# Write by afei
+
+[Unit]
+Description=Prometheus
+Documentation=https://prometheus.io/
+After=network.target
+
+[Service]
+#Type设置为notify时，该服务会不断重启; 设置为simple时，ExecStart= 进程就是该服务的主进程
+Type=simple  
+User=root
+ExecStart=/usr/local/prometheus-2.19.0-rc.0.linux-amd64/prometheus --config.file=/usr/local/prometheus-2.19.0-rc.0.linux-amd64/prometheus.yml
+Restart=on-failure
+ExecStop=/bin/kill -WINCH ${MAINPID}
+
+[Install]
+WantedBy=multi-user.target
